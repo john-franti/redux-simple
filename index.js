@@ -3,12 +3,19 @@ console.log("from  index.js");
 //import redux from 'redux';
 // non-es6 for node
 const redux = require("redux");
-
 //here we map the redux store creation method to a simple method
 const createStore = redux.createStore;
-
 //get the combine reducer from redux
 const combineReducers = redux.combineReducers
+//to add middleware, we use the redux middleware tool
+//es 6:
+//import {applyMiddleware, createStore} from 'redux'
+//or  here:
+const applyMiddleware = redux.applyMiddleware;
+//let's add logger too, we'll add this  middleware when  we create the store
+const reduxLogger = require('redux-logger');
+//create logger is needed to create an instance of the logger
+const logger = reduxLogger.createLogger();
 
 // convention to avoid typos, due to reuse of action types
 const BUY_DONUTS = "BUY_DONUTS";
@@ -79,15 +86,15 @@ const rootReducer = combineReducers({
 })
 
 //don't forget to add the rootReducer to the store if created
-const store = createStore(rootReducer);
+//we also  add any middlware at this point
+const store = createStore(rootReducer, applyMiddleware(logger));
 console.log("initial state", store.getState());
 
 //subscribe allows the app to respond to changes in the store
 //this is achieved with the .subscribe() method, which accepts a callback
 //like an interval, we can cancel a subscription by attaching a subscription to a variable, and then calling it
-const unsubscribe = store.subscribe(() =>
-  console.log("updated state", store.getState())
-);
+//note that there is now no action in the subscription  callback, as the logger is doing that for us
+const unsubscribe = store.subscribe(() => {});
 //dispatch is the way we get actions into the store's reducer
 //it is best to use the action creator to get the action into the dispatch  method
 store.dispatch(buyDonuts());
