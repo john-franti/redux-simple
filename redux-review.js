@@ -44,4 +44,6 @@ store.subscribe(() => {
 
 //finally, dispatch an action!
 store.dispatch(buyDonuts());
+store.dispatch(buyDonuts());
+store.dispatch(buyDonuts());
 

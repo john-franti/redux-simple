@@ -34,18 +34,20 @@ const buyCoffee = () => {
 };
 
 //define initial state, note that it is now nested deeper
-const initialState = {
-  donuts: {numberOfDonuts: 12},
-  coffee: {amountOfCoffee: 144}
+const initialDonutState = {
+  numberOfDonuts: 12
+};
+
+const initialCoffeeState = {
+  amountOfCoffee: 144
 };
 
 //same reducer as before, but renamed
-const donutReducer = (state = initialState, action) => {
+const donutReducer = (state = initialDonutState, action) => {
   switch (action.type) {
     case BUY_DONUTS:
       return {
-        ...state,
-        donuts: {numberOfDonuts: state.donuts.numberOfDonuts - 1}
+        numberOfDonuts: state.numberOfDonuts - 1
       };
     default:
       return state;
@@ -53,11 +55,10 @@ const donutReducer = (state = initialState, action) => {
 };
 
 //new reducer, to handle new behaviors (choosing when to make a new reducer is something to learn)
-const coffeeReducer = (state = initialState, action) => {
+const coffeeReducer = (state = initialCoffeeState, action) => {
   switch (action.type) {
     case BUY_COFFEE:
       return {
-        ...state,
         amountOfCoffee: state.amountOfCoffee - 12
       };
     default:
@@ -68,12 +69,12 @@ const coffeeReducer = (state = initialState, action) => {
 //we now have 2 reducers, so we need to get them together in one place
 //this output will nest the data one layer down in the store, so it's worth checking
 const rootReducer = combineReducers({
-  donut: donutReducer,
+  donuts: donutReducer,
   coffee: coffeeReducer
-})
+});
 
 //make your store, providing a reducer
-const store = createStore(rootReducer, applyMiddleware(logger));
+const store = createStore(rootReducer);
 
 //subscribe to the store, get the state
 store.subscribe(() => {
@@ -82,3 +83,7 @@ store.subscribe(() => {
 
 //finally, dispatch an action!
 store.dispatch(buyDonuts());
+store.dispatch(buyDonuts());
+store.dispatch(buyDonuts());
+store.dispatch(buyCoffee());
+store.dispatch(buyCoffee());
